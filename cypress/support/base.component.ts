@@ -10,7 +10,7 @@ export abstract class BaseComponent {
 
   navigateTo() {
     const bsVersionRoute = Cypress.env('bsVersion') ? `?_bsVersion=bs${Cypress.env('bsVersion')}` : '';
-    cy.visit(`${ this.pageUrl }${bsVersionRoute}`);
+    cy.visit(`${this.pageUrl}${bsVersionRoute}`);
   }
 
   scrollToMenu(subMenu: string) {
@@ -30,12 +30,12 @@ export abstract class BaseComponent {
   }
 
   isBtnTxtEqual(baseSelector: string, expectedBtnTxt: string, buttonIndex?: number) {
-    cy.get(`${ baseSelector } button`).eq(buttonIndex ? buttonIndex : 0).invoke('text')
+    cy.get(`${baseSelector} button`).eq(buttonIndex ? buttonIndex : 0).invoke('text')
       .should(btnTxt => expect(btnTxt).to.equal(expectedBtnTxt));
   }
 
   isBtnDisabled(baseSelector: string, disabled: boolean, buttonIndex = 0) {
-    cy.get(`${ baseSelector } button`).eq(buttonIndex ? buttonIndex : 0)
+    cy.get(`${baseSelector} button`).eq(buttonIndex ? buttonIndex : 0)
       .should(disabled ? 'to.be.disabled' : 'not.to.be.disabled');
   }
 
@@ -45,19 +45,19 @@ export abstract class BaseComponent {
   }
 
   clickOnBtn(baseSelector: string, buttonIndex?: number) {
-    cy.get(`${ baseSelector } button`).eq(buttonIndex ? buttonIndex : 0).click();
+    cy.get(`${baseSelector} button`).eq(buttonIndex ? buttonIndex : 0).click();
   }
 
   dblClickOnBtn(baseSelector: string, buttonIndex?: number) {
-    cy.get(`${ baseSelector } button`).eq(buttonIndex ? buttonIndex : 0).dblclick();
+    cy.get(`${baseSelector} button`).eq(buttonIndex ? buttonIndex : 0).dblclick();
   }
 
   clickOnInput(baseSelector: string, inputIndex?: number) {
-    cy.get(`${ baseSelector } input`).eq(inputIndex ? inputIndex : 0).click();
+    cy.get(`${baseSelector} input`).eq(inputIndex ? inputIndex : 0).click();
   }
 
   dblClickOnInput(baseSelector: string, inputIndex?: number) {
-    cy.get(`${ baseSelector } input`).eq(inputIndex ? inputIndex : 0).dblclick();
+    cy.get(`${baseSelector} input`).eq(inputIndex ? inputIndex : 0).dblclick();
   }
 
   hoverOnBtn(baseSelector: string, buttonIndex?: number) {
@@ -143,8 +143,12 @@ export abstract class BaseComponent {
       .should(btnTxt => expect(btnTxt).to.contain(previewText));
   }
 
+  isButtonDisabled(baseSelector: string, buttonIndex = 0, disabled = true) {
+    cy.get(`${baseSelector} button`).eq(buttonIndex).should(disabled ? 'to.be.disabled' : 'not.to.be.disabled');
+  }
+
   clickOutside(baseSelector: string) {
-    cy.get(baseSelector).eq(0).trigger('click', { clientX: 100, clientY: 100 });
+    cy.get(baseSelector).eq(0).trigger('click', { clientX: 100, clientY: 100, force: true });
   }
 
   clickCheckbox(baseSelector: string, shouldBeChecked: boolean) {
@@ -194,12 +198,12 @@ export abstract class BaseComponent {
   }
 
   isElemTextContain(baseSelector: string, itemSel: string, expectedText: string, elementIndex = 0) {
-      cy.get(baseSelector).find(itemSel).eq(elementIndex).invoke('text')
-        .should('contain', expectedText);
+    cy.get(baseSelector).find(itemSel).eq(elementIndex).invoke('text')
+      .should('contain', expectedText);
   }
 
   isElementVisible(baseSelector: string, additionalSelector: string, elementIndex = 0) {
-    cy.get(`${ baseSelector } ${additionalSelector}`).eq(elementIndex).should('be.visible');
+    cy.get(`${baseSelector} ${additionalSelector}`).eq(elementIndex).should('be.visible');
   }
 
   isUrlExist(expectedUrl: string) {
@@ -207,8 +211,13 @@ export abstract class BaseComponent {
   }
 
   isElemHasCorrectUrl(elementSelector: string, expectedUrl: string) {
-    cy.get(`${elementSelector} [href="${ expectedUrl }"]`)
+    cy.get(`${elementSelector} [href="${expectedUrl}"]`)
       .should('have.attr', 'href')
       .and('to.equal', expectedUrl);
+  }
+
+  isElementExist(baseSelector: string, elementSelector: string, existInDOM: boolean, elementIndex = 0) {
+    cy.get(`${baseSelector} ${elementSelector}`).eq(elementIndex)
+      .should(existInDOM ? 'to.exist' : 'not.to.exist');
   }
 }
